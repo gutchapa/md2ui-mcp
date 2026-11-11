@@ -1,5 +1,11 @@
 # A-MarkdownUI MCP Server (`@a-mdui/mcp-server`)
 
+> **Fork notice.** This is a fork of [anandsankarank/md2ui-mcp](https://github.com/anandsankarank/md2ui-mcp). It adds reconstructed renderer assets at `dist/assets/a-mdui.bundle.js` and `dist/assets/a-mdui.bundle.css` so `render_mdui` can inline a working `<a-mdui>` widget while the official `@a-mdui/web` package remains unpublished (the jsDelivr CDN fallback currently 404s).
+>
+> These files are a **compatibility rebuild** of the public `<a-mdui>` host API and `.mdui` language documented in this repo. **They are not the official unpublished `@a-mdui/web` package.**
+>
+> A local demo that loads those assets is in [`examples/demo.html`](examples/demo.html) (CloudPulse and the other official templates).
+
 The official **Model Context Protocol (MCP)** server for **A-MarkdownUI (`a-mdui`)**.
 
 This server connects LLM coding assistants and AI IDEs—such as **Google Antigravity IDE**, **Anthropic Claude Desktop**, **Cursor**, and **Windsurf**—directly to the A-MarkdownUI runtime, enabling AI agents to validate, lint, template, and render rich interactive native UI components on the fly.
