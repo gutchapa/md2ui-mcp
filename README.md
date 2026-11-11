@@ -4,7 +4,7 @@
 >
 > These files are a **compatibility rebuild** of the public `<a-mdui>` host API and `.mdui` language documented in this repo. **They are not the official unpublished `@a-mdui/web` package.**
 >
-> A local demo that loads those assets is in [`examples/demo.html`](examples/demo.html) (CloudPulse and the other official templates).
+> The CloudPulse dashboard, rendered by those assets from the official `dashboard` template, is in [`examples/CloudPulse-Global-Infrastructure.html`](examples/CloudPulse-Global-Infrastructure.html) ([screenshot](examples/cloudpulse-dashboard.png)). A shorter copy of the same demo is in [`examples/demo.html`](examples/demo.html).
 
 The official **Model Context Protocol (MCP)** server for **A-MarkdownUI (`a-mdui`)**.
 

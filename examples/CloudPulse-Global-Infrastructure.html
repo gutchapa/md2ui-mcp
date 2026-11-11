@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CloudPulse Global Infrastructure</title>
+  <link rel="stylesheet" href="../dist/assets/a-mdui.bundle.css">
+  <style>
+    html, body { margin: 0; background: #020617; color: #e2e8f0; font-family: Inter, system-ui, sans-serif; }
+    body { padding: 24px; }
+    .shell { max-width: 880px; margin: 0 auto; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .toolbar button {
+      background: #0f172a; color: #94a3b8; border: 1px solid rgba(148,163,184,.18);
+      border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer;
+    }
+    .toolbar button[aria-pressed="true"] { color: #38bdf8; border-color: rgba(56,189,248,.4); background: rgba(56,189,248,.08); }
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+    .badge-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; }
+    .badge { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #38bdf8; font-weight: 700; }
+    .note { margin-top: 16px; color: #64748b; font-size: 12px; }
+    .events {
+      margin-top: 16px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 16px;
+      padding: 14px 16px 12px;
+    }
+    .events-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .events-head h2 {
+      margin: 0;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    .events-head button {
+      background: transparent;
+      color: #94a3b8;
+      border: 1px solid rgba(148,163,184,.2);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    #log {
+      margin: 0;
+      min-height: 7.5em;
+      max-height: 260px;
+      overflow: auto;
+      font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #log:empty::before {
+      content: "Interact with the widget — tab loads, control changes, and button actions show up here.";
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="toolbar" id="tabs"></div>
+    <div class="card">
+      <div class="badge-row">
+        <span class="badge">A-MDUI v2.0 · compatibility rebuild</span>
+        <span class="badge" id="tpl-title"></span>
+      </div>
+      <a-mdui theme="dark" id="app-view"></a-mdui>
+    </div>
+    <section class="events" aria-label="Widget events">
+      <div class="events-head">
+        <h2>Events</h2>
+        <button type="button" id="clear-log">Clear</button>
+      </div>
+      <pre id="log"></pre>
+    </section>
+    <p class="note">CloudPulse Global Infrastructure and the other official templates, rendered by the reconstructed bundles in <code>../dist/assets/</code>. Not the official unpublished @a-mdui/web package.</p>
+  </div>
+  <script src="../dist/assets/a-mdui.bundle.js"></script>
+  <script>
+    const TEMPLATES = {"flight_booking": {"title": "Flight Booking & Cabin Selection", "description": "Airline ticket selector with live cabin tiers, add-ons toggle, and price computation.", "mdui": "@cabin(\"economy\")\n@passengers(2)\n@loungeAccess(false)\n@seatSelection(true)\n\n::: hero\n# ✈️ Flight SFO → HND\n**Non-stop flight to Tokyo Haneda** · Departs 11:30 AM · Boeing 787-9\n:::\n\n??? cabin\ntypeOf: segmented\noptions: [\"economy\", \"premium\", \"business\", \"first\"]\nlabel: Select Cabin Class\n???\n\n::: card if: @cabin == \"economy\"\n### Economy Main Cabin\nStandard seating with complimentary meals and inflight entertainment.\n* Seat Pitch: 32\"\n* Carry-on included\n* Total per traveler: **$850**\n:::\n\n::: card if: @cabin == \"premium\"\n### Premium Economy\nExtra legroom, priority boarding, and premium dining.\n* Seat Pitch: 38\"\n* 2 Checked bags (23kg each)\n* Haneda priority security lane\n* Total per traveler: **$1,450**\n:::\n\n::: card if: @cabin == \"business\"\n### Business Class Suite\nLie-flat seat with sliding privacy door and sommelier service.\n* Seat Pitch: 78\" (Full Flat Bed)\n* SFO Polaris lounge access included\n* 2 Checked bags (32kg each)\n* Total per traveler: **$3,200**\n:::\n\n::: card if: @cabin == \"first\"\n### First Class Sanctuary\nPrivate enclosed bedroom suite with Krug champagne and caviar.\n* 43\" 4K IFE monitor\n* Private VIP escort & apron transfer\n* Total per traveler: **$5,800**\n:::\n\n::: card\n### Add-ons & Passenger Count\n\n??? passengers\ntypeOf: slider\nmin: 1\nmax: 6\nstep: 1\nlabel: Number of Passengers\n???\n\n::: row\n??? loungeAccess\ntypeOf: toggle\nlabel: Priority Lounge Access ($95 / person)\n???\n\n??? seatSelection\ntypeOf: toggle\nlabel: Advance Window/Aisle Seat Selection ($35)\n???\n:::\n\n:::\n\n[Confirm Itinerary & Proceed](action:confirm_booking){primary} [Change Dates](action:change_dates){secondary}"}, "dashboard": {"title": "Executive Telemetry & SLA Dashboard", "description": "System health indicators, response time metrics, and cluster latency chart.", "mdui": "@env(\"production\")\n@region(\"us-east-1\")\n\n::: hero\n# ⚡ CloudPulse Global Infrastructure\nReal-time fleet health across 18 regional availability zones.\n:::\n\n??? region\ntypeOf: segmented\noptions: [\"us-east-1\", \"eu-west-1\", \"ap-northeast-1\"]\nlabel: Active Edge Region\n???\n\n::: grid\n::: card\n### Overall Health\n## 99.992% {.success}\n*(P99 SLA: Met)*\n:::\n\n::: card\n### API Ingestion\n## 1.42 M req/s {.primary}\n*(+8.4% vs baseline)*\n:::\n\n::: card\n### Median Latency\n## 18.4 ms {.success}\n*(-2.1 ms improvement)*\n:::\n\n::: card\n### Error Rate\n## 0.003% {.success}\n*(5xx below 0.01% threshold)*\n:::\n:::\n\n::: barChart\n| Service Tier | P50 (ms) | P99 (ms) |\n| :--- | :--- | :--- |\n| Auth Gateway | 4.2 | 12.8 |\n| GraphQL Mesh | 11.5 | 32.1 |\n| Vector Index | 8.9 | 24.3 |\n| SQL Replica | 6.1 | 18.7 |\n:::\n\n[Trigger Failover Drill](action:failover){secondary} [Export Telemetry JSON](action:export_telemetry){primary}"}, "checkout": {"title": "Retail Shopping Bag & Checkout Flow", "description": "Multi-step e-commerce checkout with quantity selectors and dynamic discount coupon.", "mdui": "@shipping(\"ground\")\n@couponCode(\"\")\n@giftWrap(false)\n\n::: hero\n# 🛍️ Express Retail Checkout\nReview your cart items and complete payment securely.\n:::\n\n::: card\n### Order Items\n\n| Item | Qty | Unit Price | Total |\n| :--- | :--- | :--- | :--- |\n| **Studio Wireless Headphones** | 1 | $199.00 | $199.00 |\n| **Braided USB-C Cable (2m)** | 2 | $19.00 | $38.00 |\n| **Matte MagSafe Phone Case** | 1 | $49.00 | $49.00 |\n\n::: row\n::: card\nSubtotal: **$286.00**\nEstimated Tax: **$23.60**\n:::\n::: card\nShipping: **Free Ground**\nEstimated Delivery: **3-5 Business Days**\n:::\n:::\n:::\n\n??? shipping\ntypeOf: segmented\noptions: [\"ground\", \"express\", \"overnight\"]\nlabel: Shipping Delivery Speed\n???\n\n::: row\n??? giftWrap\ntypeOf: toggle\nlabel: Add Premium Gift Packaging ($7.50)\n???\n\n??? couponCode\ntypeOf: text\nplaceholder: Promo Code (e.g. SAVE20)\nlabel: Promotional Discount\n???\n:::\n\n[Authorize Apple Pay ($309.60)](action:pay_applepay){primary} [Pay with Credit Card](action:pay_card){secondary}"}, "charts": {"title": "Visual Data Analytics & Charts", "description": "Showcase of SVG Bar, Line, and Donut charts driven by markdown pipe tables.", "mdui": "@channel(\"all\")\n\n# 📊 Performance Metrics & Revenue Analytics\n\n::: barChart\n| Channel | Q1 Revenue | Q2 Revenue |\n| :--- | :--- | :--- |\n| Organic Search | 142000 | 188000 |\n| Direct Traffic | 98000 | 115000 |\n| Partner Referrals | 62000 | 89000 |\n| Social Campaigns | 44000 | 72000 |\n:::\n\n::: lineChart\n| Month | Active Users | Paid Subscribers |\n| :--- | :--- | :--- |\n| Jan | 12000 | 1400 |\n| Feb | 14500 | 1750 |\n| Mar | 18200 | 2300 |\n| Apr | 22400 | 3100 |\n| May | 28900 | 4250 |\n| Jun | 36500 | 5800 |\n:::\n\n::: pieChart\n| Plan Tier | Accounts |\n| :--- | :--- |\n| Free Starter | 5400 |\n| Pro Developer | 2800 |\n| Team Workspace | 1200 |\n| Enterprise Custom | 450 |\n:::\n\n[Download CSV Reports](action:download_csv){secondary} [Refresh Analytics Feed](action:refresh){primary}"}, "booking_wizard": {"title": "Progressive Intake Booking Wizard", "description": "Three-stage intake wizard (criteria intake -> option selection -> confirmation) without pre-fabricated assumptions.", "mdui": "@step(\"intake\")\n@specialty(\"Primary Care\")\n@visitType(\"In-Person\")\n@provider(\"Dr. Sarah Jenkins, MD\")\n@timeSlot(\"Tomorrow at 10:00 AM\")\n@patientName(\"\")\n\n::: hero\n# 🩺 HealthConnect Appointment Scheduling\nSecure provider scheduling and intake assistant.\n:::\n\n::: card if: @step == \"intake\"\n### Step 1 of 3: Consultation Details\nPlease specify your consultation requirements to view matching providers.\n\n??? specialty\ntypeOf: segmented\noptions: [\"Primary Care\", \"Cardiology\", \"Dermatology\", \"Pediatrics\"]\nlabel: Care Specialty\n???\n\n??? visitType\ntypeOf: segmented\noptions: [\"In-Person\", \"Telehealth Video\"]\nlabel: Consultation Type\n???\n\n??? patientName\ntypeOf: text\nrequired: true\nplaceholder: Enter Full Legal Name\nlabel: Patient Name *(Required)*\n???\n\n[Find Available Providers](action:submit; action:set:step=\"selection\"){primary}\n:::\n\n::: card if: @step == \"selection\"\n### Step 2 of 3: Choose Provider & Time Slot\nSelect an available doctor and appointment time for **{{ specialty }}** ({{ visitType }}).\n\n??? provider\ntypeOf: segmented\nstyle: menu\noptions: [\"Dr. Sarah Jenkins, MD (Family Medicine)\", \"Dr. Marcus Patel, MD (Internal Medicine)\", \"Dr. Emily Chen, DO (Preventive Care)\"]\nlabel: Healthcare Provider\n???\n\n::: row\n??? appointmentDate\ntypeOf: segmented\noptions: [\"Tomorrow\", \"Wednesday\", \"Thursday\"]\nlabel: Date\n???\n\n??? timeSlot\ntypeOf: segmented\noptions: [\"10:00 AM\", \"2:30 PM\", \"4:15 PM\"]\nlabel: Time\n???\n:::\n\n[← Back to Details](action:set:step=\"intake\"){secondary} = [Confirm Appointment](action:set:step=\"confirmed\"){primary}\n:::\n\n::: card if: @step == \"confirmed\"\n### 🎉 Appointment Confirmed!\nYour consultation has been reserved in the clinic calendar.\n\n* **Patient**: {{ patientName | \"Registered Patient\" }}\n* **Specialty**: {{ specialty }}\n* **Provider**: **{{ provider }}**\n* **Time**: **{{ timeSlot }}**\n* **Format**: {{ visitType }}\n* **Confirmation Code**: `HC-8942-TX`\n\n[📅 Add to Google Calendar](https://calendar.google.com/calendar/render?action=TEMPLATE&text=Doctor+Appointment+-+Dr.+Sarah+Jenkins&details=Appointment+for+{{ patientName }}+with+{{ provider }}&location=Austin+Regional+Medical+Center,+Suite+420){primary, target: _blank} = [Modify Appointment](action:set:step=\"intake\"){secondary}\n:::"}};
+    const params = new URLSearchParams(location.search);
+    const start = params.get('tpl') || 'dashboard';
+    const tabs = document.getElementById('tabs');
+    const view = document.getElementById('app-view');
+    const logEl = document.getElementById('log');
+
+    function stamp() {
+      return new Date().toLocaleTimeString('en-IN', { hour12: false, timeZone: 'Asia/Calcutta' });
+    }
+    function log(kind, detail) {
+      const line = stamp() + '  ' + kind + (detail ? '\n          ' + detail : '');
+      logEl.textContent = logEl.textContent ? (line + '\n' + logEl.textContent) : line;
+    }
+
+    document.getElementById('clear-log').addEventListener('click', () => { logEl.textContent = ''; });
+
+    Object.keys(TEMPLATES).forEach((key) => {
+      const b = document.createElement('button');
+      b.textContent = key;
+      b.dataset.tpl = key;
+      b.addEventListener('click', () => load(key));
+      tabs.appendChild(b);
+    });
+
+    function load(key) {
+      document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.tpl === key ? 'true' : 'false'));
+      document.getElementById('tpl-title').textContent = TEMPLATES[key].title;
+      view.content = TEMPLATES[key].mdui;
+      history.replaceState(null, '', '?tpl=' + encodeURIComponent(key));
+      log('loaded  ' + key, 'values  ' + JSON.stringify(view.values));
+    }
+
+    view.addEventListener('submit', (e) => log('submit', JSON.stringify(e.detail, null, 2).replace(/\n/g, '\n          ')));
+    view.addEventListener('action', (e) => log('action  ' + ((e.detail && e.detail.id) || ''), JSON.stringify(e.detail, null, 2).replace(/\n/g, '\n          ')));
+
+    view.addEventListener('click', (e) => {
+      const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
+      const el = path.find((n) => n && n.getAttribute && n.hasAttribute('data-amdui-set'))
+        || (e.target && e.target.closest && e.target.closest('[data-amdui-set]'));
+      if (!el) return;
+      const name = el.getAttribute('data-amdui-set');
+      queueMicrotask(() => log('change  ' + name + '=' + JSON.stringify(view.values[name]), 'values  ' + JSON.stringify(view.values)));
+    });
+    function logBind(e) {
+      const el = e.target;
+      if (!el || !el.getAttribute) return;
+      const name = el.getAttribute('data-amdui-bind');
+      if (!name) return;
+      queueMicrotask(() => log('change  ' + name + '=' + JSON.stringify(view.values[name]), 'values  ' + JSON.stringify(view.values)));
+    }
+    view.addEventListener('input', logBind);
+    view.addEventListener('change', logBind);
+
+    load(TEMPLATES[start] ? start : 'dashboard');
+
+    if (params.get('shot') === 'events') {
+      requestAnimationFrame(() => {
+        const btn = view.querySelector('[data-amdui-actions="action:export_telemetry"]');
+        if (btn) btn.click();
+        const region = view.querySelector('[data-amdui-value="eu-west-1"]');
+        if (region) region.click();
+      });
+    }
+  </script>
+</body>
+</html>
